@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
   <style>
     table,
     tr,
@@ -34,8 +35,37 @@
       border-radius: 50%;
     }
 
+    #dlgConfirmCancel,
+    #btnConfirm,
+    #btnCancel,
+    #dlgAreYouSure,
+    #btnYes,
+    #btnNo {
+      border-radius: 10px;
+    }
+
+    #dlgConfirmCancel,
+    #dlgAreYouSure {
+      background-color: lightgrey;
+    }
+
+    #btnConfirm,
+    #btnYes {
+      background-color: neon green;
+      color: white;
+    }
+
+    #btnCancel,
+    #btnNo {
+      background-color: red;
+    }
+
+    .dlgbuttons {
+      display: flex;
+      justify-content: space-evenly;
+    }
+
     input[type="number"],
-    input[type="text"],
     button {
       padding: 10px;
       margin: 5px;
@@ -43,21 +73,8 @@
       border-radius: 5px;
     }
 
-    input[type="number"],
-    input[type="text"] {
+    input[type="number"] {
       width: 120px;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .add-form {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #006400;
-      background-color: #f0fff0;
-      border-radius: 10px;
     }
   </style>
 
@@ -79,7 +96,8 @@
             <td>Actions</td>
           </tr>
         </thead>
-        <tbody id="tablebody"></tbody>
+        <tbody id="tablebody">
+        </tbody>
         <tfoot>
           <tr>
             <td></td>
@@ -89,158 +107,130 @@
             <td id="tGrossPay" class="ndata">0.00</td>
             <td id="tDeduction" class="ndata">0.00</td>
             <td id="tNetPay" class="ndata">0.00</td>
-            <td></td>
           </tr>
         </tfoot>
       </table>
 
-      <!-- Add Employee Form -->
-      <div class="add-form">
-        <h3>Add New Employee</h3>
-        <label for="name">Name:</label>
-        <input id="name" type="text" placeholder="Enter name" />
-        <br />
-        <label for="image">Image URL:</label>
-        <input id="image" type="text" placeholder="Enter image URL" />
-        <br />
-        <label for="daysWorked">Days Worked:</label>
-        <input id="daysWorked" type="number" placeholder="Enter days worked" />
-        <br />
-        <label for="dailyRate">Daily Rate:</label>
-        <input id="dailyRate" type="number" placeholder="Enter daily rate" />
-        <br />
-        <label for="deduction">Deduction:</label>
-        <input id="deduction" type="number" placeholder="Enter deduction" />
-        <br />
-        <button onclick="addEmployee()">Add Employee</button>
+      <div>
+        <label>Delete Emp. No.</label>
+        <input id="delemployee" type="number">
+        <button id="btndelete">Delete</button>
+        <button id="btndeleteall">Delete All</button>
       </div>
     </div>
 
+    <dialog id="dlgConfirmCancel">
+      <form method="dialog">
+        <h4 id="dlgmsg"></h4>
+        <div class="dlgbuttons">
+          <button id="btnConfirm" value="confirm">Confirm</button>
+          <button id="btnCancel" value="cancel">Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="dlgAreYouSure">
+      <form method="dialog">
+        <h4 id="dlgmsg2"></h4>
+        <div class="dlgbuttons">
+          <button id="btnYes" value="yes">Yes</button>
+          <button id="btnNo" value="no">No</button>
+        </div>
+      </form>
+    </dialog>
+
     <script>
-      let payroll = [];
+      var payroll = [];
 
       function addEmployees() {
         payroll = []; // Initialize payroll
 
-        payroll.push({
+        let emp1 = {
           name: "John Von Neumann",
-          image: "https://via.placeholder.com/50",
-          daysworked: 10.0,
-          dailyrate: 500.0,
-          deduction: 100.0,
-        });
+          image: "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcT1ODd1mAmW3YW_ZwjVWBTuBmbXmPIo1j0bKr4-dLiSkZOh6EpxlB3d0XqBAHEijYq87JLsD3efmmEXIeQ",
+          daysworked: 10.00,
+          dailyrate: 500.00,
+          grosspay: (10.00 * 500.00).toFixed(2),
+          deduction: 100.00,
+          netpay: ((10.00 * 500.00) - 100.00).toFixed(2),
+        };
+        payroll.push(emp1);
 
-        payroll.push({
+        let emp2 = {
           name: "Charles Babbage",
-          image: "https://via.placeholder.com/50",
-          daysworked: 12.0,
-          dailyrate: 600.0,
-          deduction: 200.0,
-        });
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjpNe7ejH60O__ipDLxb06J_nFkxsd4VfvytGsUgcnAdipxHvvKLjL6zPCRRuabyzDMj1bFNuVLX11RQ99j7thc2jiCni9LLJseRX6mA0",
+          daysworked: 12.00,
+          dailyrate: 600.00,
+          grosspay: (12.00 * 600.00).toFixed(2),
+          deduction: 200.00,
+          netpay: ((12.00 * 600.00) - 200.00).toFixed(2),
+        };
+        payroll.push(emp2);
 
-        payroll.push({
+        let emp3 = {
           name: "Ada Lovelace",
-          image: "https://via.placeholder.com/50",
-          daysworked: 15.0,
-          dailyrate: 550.0,
-          deduction: 150.0,
-        });
+          image: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Ada_Byron_daguerreotype_by_Antoine_Claudet_1843_or_1850_-_cropped_%28cropped%29.png",
+          daysworked: 15.00,
+          dailyrate: 550.00,
+          grosspay: (15.00 * 550.00).toFixed(2),
+          deduction: 150.00,
+          netpay: ((15.00 * 550.00) - 150.00).toFixed(2),
+        };
+        payroll.push(emp3);
 
-        payroll.push({
+        let emp4 = {
           name: "Alan Turing",
-          image: "https://via.placeholder.com/50",
-          daysworked: 20.0,
-          dailyrate: 700.0,
-          deduction: 300.0,
-        });
-      }
-
-      function calculatePays(employee) {
-        employee.grosspay = (employee.daysworked * employee.dailyrate).toFixed(2);
-        employee.netpay = (employee.grosspay - employee.deduction).toFixed(2);
+          image: "https://upload.wikimedia.org/wikipedia/commons/4/40/Alan_Turing_%281912-1954%29_in_1936_at_Princeton_University_%28cropped%29.jpg",
+          daysworked: 20.00,
+          dailyrate: 700.00,
+          grosspay: (20.00 * 700.00).toFixed(2),
+          deduction: 300.00,
+          netpay: ((20.00 * 700.00) - 300.00).toFixed(2),
+        };
+        payroll.push(emp4);
       }
 
       function showEmployees() {
-        let tableBody = "";
+        let tb = "",
+          trec = "",
+          tgpay = 0.00,
+          tded = 0.00,
+          tnetpay = 0.00;
         let lno = 1;
 
         for (let emp of payroll) {
-          calculatePays(emp);
-
-          tableBody += `<tr>
-              <td>${lno}</td>
-              <td>${emp.name}</td>
-              <td><img src="${emp.image}" alt="${emp.name}" /></td>
-              <td>${emp.daysworked}</td>
-              <td>${emp.dailyrate}</td>
-              <td>${emp.grosspay}</td>
-              <td>${emp.deduction}</td>
-              <td>${emp.netpay}</td>
-              <td>
-                <button onclick="editEmployee(${lno - 1})">Edit</button>
-                <button onclick="deleteEmployee(${lno - 1})">Delete</button>
-                <button onclick="downloadImage('${emp.image}', '${emp.name}')">Download Image</button>
-              </td>
-            </tr>`;
-          lno++;
+          trec = "<tr>"
+            + '<td style="text-align:right">' + lno.toFixed(0) + "</td>"
+            + "<td>" + emp.name + "</td>"
+            + '<td><img src="' + emp.image + '" alt="' + emp.name + '"></td>'
+            + '<td class="ndata">' + emp.daysworked.toFixed(2) + "</td>"
+            + '<td class="ndata">' + emp.dailyrate.toFixed(2) + "</td>"
+            + '<td class="ndata">' + emp.grosspay + "</td>"
+            + '<td class="ndata">' + emp.deduction.toFixed(2) + "</td>'
+            + '<td class="ndata">' + emp.netpay + "</td>'
+            + '<td>'
+            + '<button onclick="updateImage(' + (lno - 1) + ')">Update Image URL</button>'
+            + '</td>'
+            + "</tr>";
+          tb += trec;
+          tgpay += parseFloat(emp.grosspay);
+          tded += parseFloat(emp.deduction);
+          tnetpay += parseFloat(emp.netpay);
+          ++lno;
         }
 
-        document.getElementById("tablebody").innerHTML = tableBody;
+        document.getElementById("tablebody").innerHTML = tb;
+        document.getElementById("tGrossPay").innerHTML = tgpay.toFixed(2);
+        document.getElementById("tDeduction").innerHTML = tded.toFixed(2);
+        document.getElementById("tNetPay").innerHTML = tnetpay.toFixed(2);
       }
 
-      function addEmployee() {
-        const name = document.getElementById("name").value;
-        const image = document.getElementById("image").value;
-        const daysWorked = parseFloat(document.getElementById("daysWorked").value);
-        const dailyRate = parseFloat(document.getElementById("dailyRate").value);
-        const deduction = parseFloat(document.getElementById("deduction").value);
-
-        if (name && image && !isNaN(daysWorked) && !isNaN(dailyRate) && !isNaN(deduction)) {
-          payroll.push({
-            name: name,
-            image: image,
-            daysworked: daysWorked,
-            dailyrate: dailyRate,
-            deduction: deduction,
-          });
+      function updateImage(index) {
+        const newImageUrl = prompt("Enter the new Image URL:");
+        if (newImageUrl) {
+          payroll[index].image = newImageUrl;
           showEmployees();
-
-          // Clear input fields
-          document.getElementById("name").value = "";
-          document.getElementById("image").value = "";
-          document.getElementById("daysWorked").value = "";
-          document.getElementById("dailyRate").value = "";
-          document.getElementById("deduction").value = "";
-        } else {
-          alert("Please fill out all fields correctly!");
         }
-      }
-
-      function editEmployee(index) {
-        const emp = payroll[index];
-        const newName = prompt("Edit Name:", emp.name);
-        const newDaysWorked = prompt("Edit Days Worked:", emp.daysworked);
-        const newDailyRate = prompt("Edit Daily Rate:", emp.dailyrate);
-        const newDeduction = prompt("Edit Deduction:", emp.deduction);
-
-        if (newName) emp.name = newName;
-        if (!isNaN(newDaysWorked)) emp.daysworked = parseFloat(newDaysWorked);
-        if (!isNaN(newDailyRate)) emp.dailyrate = parseFloat(newDailyRate);
-        if (!isNaN(newDeduction)) emp.deduction = parseFloat(newDeduction);
-
-        showEmployees();
-      }
-
-      function deleteEmployee(index) {
-        payroll.splice(index, 1);
-        showEmployees();
-      }
-
-      function downloadImage(url, name) {
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${name.replaceAll(" ", "_")}_image.jpg`;
-        link.click();
       }
 
       document.addEventListener("DOMContentLoaded", () => {
