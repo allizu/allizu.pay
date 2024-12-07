@@ -1,31 +1,70 @@
 <!DOCTYPE html>
 <html>
   <style>
+      /* Global Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f8ff; /* Light Blue Background */
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Banner Styles */
+    .banner {
+      background-color: #ffb6c1; /* Light pink background for banner */
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+      animation: slideBanner 5s infinite;
+    }
+
+    @keyframes slideBanner {
+      0% {
+        transform: translateX(100%);
+      }
+      50% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    .banner span {
+      color: #ff69b4; /* Hot pink for emphasis */
+    }
+
+    /* Container Styling */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+    }
+
+    h2 {
+      color: #ff6347; /* Tomato color for title */
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
     table,
     tr,
     tfoot,
     td {
-      border: 1px solid black;
+      border: 1px solid #ff69b4;
+      border-radius: 8px;
     }
 
     .ndata {
       text-align: right;
     }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #e0ffe0; /* Light green background */
-      padding: 20px;
-    }
-
-    h2 {
-      color: #006400; /* Dark green color */
-    }
-
     td {
       padding: 10px;
+      text-align: center;
     }
 
     img {
@@ -34,6 +73,7 @@
       border-radius: 50%;
     }
 
+    /* Input & Button Styles */
     input[type="number"],
     input[type="text"],
     button {
@@ -41,27 +81,109 @@
       margin: 5px;
       font-size: 1rem;
       border-radius: 5px;
+      border: 1px solid #ff69b4;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff1493; /* Darker pink on hover */
     }
 
     input[type="number"],
     input[type="text"] {
-      width: 120px;
-    }
-
-    button {
-      cursor: pointer;
+      width: 180px;
     }
 
     .add-form {
       margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #006400;
-      background-color: #f0fff0;
+      padding: 15px;
+      border: 1px solid #ff69b4;
+      background-color: #fff0f5; /* Lavender blush */
       border-radius: 10px;
     }
+
+    /* Emoji Container */
+    .emoji-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      font-size: 2rem;
+      gap: 15px;
+    }
+
+    .kaomoji {
+      margin: 0 10px;
+      font-size: 2.5rem;
+      animation: floatEmoji 1.5s ease-in-out infinite;
+    }
+
+    /* Floating Animation for Kaomoji */
+    @keyframes floatEmoji {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Add Padding to the Bottom */
+    footer {
+      padding: 20px;
+      background-color: #ffb6c1;
+      text-align: center;
+      font-size: 1rem;
+    }
+    /* Modal Styles */
+#confirmModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+button {
+  padding: 10px;
+  margin: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ff69b4;
+  background-color: #ff69b4;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ff1493;
+}
+
   </style>
 
   <body>
+    <!-- Banner Section -->
+    <div class="banner">
+      Welcome to the <span>Geniuses of Computer Science Payroll!</span>
+    </div>
+
+  
     <div class="container">
       <h2>The Amazing Historical Payroll of Computer Geniuses!</h2>
 
@@ -116,6 +238,30 @@
       </div>
     </div>
 
+<!-- Kaomoji (Japanese Emoticons) Section -->
+      <div class="emoji-container">
+        <span class="kaomoji">(*^_^*)</span>
+        <span class="kaomoji">(*^_^*)</span>
+        <span class="kaomoji">(*^_^*)</span>
+        <span class="kaomoji">(*^_^*)</span>
+        <span class="kaomoji">(*^_^*)</span>
+      </div>
+    </div>
+    
+<!-- Modal Structure -->
+<div id="confirmModal" style="display: none;">
+  <div class="modal-content">
+    <h2>Are you sure you want to delete this employee?</h2>
+    <button id="confirmDelete">Yes, Delete</button>
+    <button id="cancelDelete">Cancel</button>
+  </div>
+</div>
+
+
+<footer>
+      Grade A passing score na yan!!
+    </footer>
+
     <script>
       let payroll = [];
 
@@ -132,7 +278,7 @@
 
         payroll.push({
           name: "Charles Babbage",
-          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9WlcqgoTqLLI99W-f4x5rooz5_UKiAvf-Valkrbj0S9HhZiCE7_tEFlUVwK80Oke8dxZ5Dp0yHyCpJDhxw63cyw",
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbppAC3zloJbY5EaWYgEllsV-gaoSzMlzzNw&s",
           daysworked: 12.0,
           dailyrate: 600.0,
           deduction: 200.0,
@@ -231,18 +377,65 @@
         showEmployees();
       }
 
-      function deleteEmployee(index) {
-        payroll.splice(index, 1);
-        showEmployees();
-      }
+      let employeeToDeleteIndex = null;
 
-      function addImage(index) {
+function showConfirmModal(index) {
+  employeeToDeleteIndex = index;
+  document.getElementById('confirmModal').style.display = 'flex';
+}
+
+document.getElementById('confirmDelete').onclick = function() {
+  if (employeeToDeleteIndex !== null) {
+    deleteEmployee(employeeToDeleteIndex);
+  }
+  document.getElementById('confirmModal').style.display = 'none';
+};
+
+document.getElementById('cancelDelete').onclick = function() {
+  document.getElementById('confirmModal').style.display = 'none';
+};
+
+function deleteEmployee(index) {
+  payroll.splice(index, 1);
+  showEmployees();
+}
+function addImage(index) {
         const newImage = prompt("Enter new image URL:");
         if (newImage) {
           payroll[index].image = newImage;
           showEmployees();
         }
       }
+
+
+function showEmployees() {
+  let tableBody = "";
+  let lno = 1;
+
+  for (let emp of payroll) {
+    calculatePays(emp);
+
+    tableBody += `<tr>
+        <td>${lno}</td>
+        <td>${emp.name}</td>
+        <td><img src="${emp.image}" alt="${emp.name}" /></td>
+        <td>${emp.daysworked}</td>
+        <td>${emp.dailyrate}</td>
+        <td>${emp.grosspay}</td>
+        <td>${emp.deduction}</td>
+        <td>${emp.netpay}</td>
+        <td>
+          <button onclick="editEmployee(${lno - 1})">Edit</button>
+          <button onclick="showConfirmModal(${lno - 1})">Delete</button>
+          <button onclick="addImage(${lno - 1})">Add Image</button>
+        </td>
+      </tr>`;
+    lno++;
+  }
+
+  document.getElementById("tablebody").innerHTML = tableBody;
+}
+
 
       document.addEventListener("DOMContentLoaded", () => {
         addEmployees();
